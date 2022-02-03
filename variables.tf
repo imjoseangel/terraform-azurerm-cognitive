@@ -1,5 +1,5 @@
-variable "name" {
-  description = "Name of Azure Postgres service."
+variable "search_name" {
+  description = "Name of Azure Search service."
 }
 
 variable "create_resource_group" {

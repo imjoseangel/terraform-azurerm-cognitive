@@ -28,8 +28,8 @@ resource "azurerm_search_service" "main" {
   name                = (lower(var.search_name))
   resource_group_name = local.resource_group_name
   location            = local.location
-  sku                 = var.sku
-  partition_count     = var.sku == "standard" ? var.partition_count : null
-  replica_count       = var.sku == "standard" ? var.replica_count : null
+  sku                 = var.search_sku
+  partition_count     = var.search_sku == "standard" ? var.partition_count : null
+  replica_count       = var.search_sku == "standard" ? var.replica_count : null
   tags                = var.tags
 }
