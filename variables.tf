@@ -17,6 +17,24 @@ variable "location" {
   default     = "westeurope"
 }
 
+variable "search_sku" {
+  description = "(Required) The SKU which should be used for this Search Service. Possible values are basic, free, standard, standard2, standard3, storage_optimized_l1 and storage_optimized_l2. Changing this forces a new Search Service to be created."
+  default     = "standard"
+  type        = string
+}
+
+variable "partition_count" {
+  description = "(Optional) The number of partitions which should be created."
+  default     = 1
+  type        = number
+}
+
+variable "replica_count" {
+  description = "(Optional) The number of replica's which should be created."
+  default     = 1
+  type        = number
+}
+
 variable "tags" {
   description = "Tags to apply to all resources created."
   type        = map(string)
