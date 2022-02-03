@@ -33,3 +33,19 @@ resource "azurerm_search_service" "main" {
   replica_count       = var.search_sku == "standard" ? var.replica_count : null
   tags                = var.tags
 }
+
+resource "azurerm_application_insights" "main" {
+  name                                  = lower(var.app_insights_name)
+  resource_group_name                   = local.resource_group_name
+  location                              = local.location
+  application_type                      = "web"
+  daily_data_cap_in_gb                  = 100
+  daily_data_cap_notifications_disabled = false
+  disable_ip_masking                    = false
+  internet_ingestion_enabled            = true
+  internet_query_enabled                = true
+  local_authentication_disabled         = false
+  retention_in_days                     = 90
+  sampling_percentage                   = 0
+  tags                                  = local.tags
+}
