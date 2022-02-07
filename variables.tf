@@ -36,11 +36,6 @@ variable "replica_count" {
   type        = number
 }
 
-
-variable "search_name" {
-  description = "Name of Azure Search service."
-  type        = string
-}
 variable "tags" {
   description = "Tags to apply to all resources created."
   type        = map(string)
