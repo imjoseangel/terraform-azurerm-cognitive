@@ -35,7 +35,7 @@ resource "azurerm_search_service" "main" {
 }
 
 resource "azurerm_application_insights" "main" {
-  name                                  = lower(var.app_insights_name)
+  name                                  = lower(var.application_insights_name)
   resource_group_name                   = local.resource_group_name
   location                              = local.location
   application_type                      = "web"
@@ -47,5 +47,5 @@ resource "azurerm_application_insights" "main" {
   local_authentication_disabled         = false
   retention_in_days                     = 90
   sampling_percentage                   = 0
-  tags                                  = local.tags
+  tags                                  = var.tags
 }

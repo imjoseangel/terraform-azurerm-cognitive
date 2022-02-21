@@ -36,6 +36,12 @@ variable "replica_count" {
   type        = number
 }
 
+variable "application_insights_name" {
+  description = "Name of the existing Application Insights to use."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to all resources created."
   type        = map(string)
