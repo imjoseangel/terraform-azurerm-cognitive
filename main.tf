@@ -49,3 +49,23 @@ resource "azurerm_application_insights" "main" {
   sampling_percentage                   = 0
   tags                                  = var.tags
 }
+
+resource "azurerm_app_service_plan" "main" {
+  name                         = lower(var.application_plan_name)
+  location                     = var.location
+  resource_group_name          = local.resource_group_name
+  is_xenon                     = false
+  kind                         = "app"
+  maximum_elastic_worker_count = 1
+  per_site_scaling             = false
+  reserved                     = false
+  tags                         = var.tags
+  zone_redundant               = false
+
+  sku {
+    capacity = 1
+    size     = "P1v3"
+    tier     = "PremiumV2"
+  }
+
+}

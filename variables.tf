@@ -42,6 +42,12 @@ variable "application_insights_name" {
   default     = null
 }
 
+variable "application_plan_name" {
+  description = "Name of the existing Application Plan to use."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to all resources created."
   type        = map(string)
