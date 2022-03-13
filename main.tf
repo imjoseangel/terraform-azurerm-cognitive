@@ -80,9 +80,9 @@ resource "azurerm_app_service" "mainqna" {
     "AzureSearchName"            = azurerm_search_service.main.name
     "DefaultAnswer"              = "No good match found in KB."
     "EnableMultipleTestIndex"    = "true"
-    "PrimaryEndpointKey"         = format("%s-PrimaryEndpointKey", var.application_qna_name)
+    "PrimaryEndpointKey"         = format("%s-PrimaryEndpointKey", lower(var.application_qna_name))
     "QNAMAKER_EXTENSION_VERSION" = "latest"
-    "SecondaryEndpointKey"       = format("%s-SecondaryEndpointKey", var.application_qna_name)
+    "SecondaryEndpointKey"       = format("%s-SecondaryEndpointKey", lower(var.application_qna_name))
     "UserAppInsightsAppId"       = azurerm_application_insights.main.app_id
     "UserAppInsightsKey"         = azurerm_application_insights.main.instrumentation_key
     "UserAppInsightsName"        = azurerm_application_insights.main.name
@@ -123,5 +123,22 @@ resource "azurerm_app_service" "mainqna" {
         retention_in_mb   = 35
       }
     }
+  }
+}
+
+resource "azurerm_cognitive_account" "main" {
+  name                              = lower(var.application_qna_name)
+  location                          = "westus"
+  resource_group_name               = local.resource_group_name
+  kind                              = "QnAMaker"
+  local_auth_enabled                = true
+  outbound_network_access_restrited = false
+  public_network_access_enabled     = true
+  qna_runtime_endpoint              = format("https://%s.azurewebsites.net", lower(var.application_qna_name))
+  sku_name                          = "S0"
+  tags                              = var.tags
+
+  identity {
+    type = "SystemAssigned"
   }
 }
