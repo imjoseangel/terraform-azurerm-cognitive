@@ -25,7 +25,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_search_service" "main" {
-  name                = format("%s-search", lower(var.application_name))
+  name                = format("%s-search", lower(var.name))
   resource_group_name = local.resource_group_name
   location            = local.location
   sku                 = var.search_sku
@@ -35,7 +35,7 @@ resource "azurerm_search_service" "main" {
 }
 
 resource "azurerm_application_insights" "main" {
-  name                                  = lower(var.application_name)
+  name                                  = lower(var.name)
   resource_group_name                   = local.resource_group_name
   location                              = local.location
   application_type                      = "web"
@@ -51,7 +51,7 @@ resource "azurerm_application_insights" "main" {
 }
 
 resource "azurerm_app_service_plan" "main" {
-  name                         = lower(var.application_name)
+  name                         = lower(var.name)
   location                     = var.location
   resource_group_name          = local.resource_group_name
   is_xenon                     = false
@@ -71,7 +71,7 @@ resource "azurerm_app_service_plan" "main" {
 }
 
 resource "azurerm_app_service" "mainqna" {
-  name                = format("%s-qna", lower(var.application_name))
+  name                = format("%s-qna", lower(var.name))
   resource_group_name = local.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.main.id
   location            = var.location
@@ -80,9 +80,9 @@ resource "azurerm_app_service" "mainqna" {
     "AzureSearchName"            = azurerm_search_service.main.name
     "DefaultAnswer"              = "No good match found in KB."
     "EnableMultipleTestIndex"    = "true"
-    "PrimaryEndpointKey"         = format("%s-qna-PrimaryEndpointKey", lower(var.application_name))
+    "PrimaryEndpointKey"         = format("%s-qna-PrimaryEndpointKey", lower(var.name))
     "QNAMAKER_EXTENSION_VERSION" = "latest"
-    "SecondaryEndpointKey"       = format("%s-qna-SecondaryEndpointKey", lower(var.application_name))
+    "SecondaryEndpointKey"       = format("%s-qna-SecondaryEndpointKey", lower(var.name))
     "UserAppInsightsAppId"       = azurerm_application_insights.main.app_id
     "UserAppInsightsKey"         = azurerm_application_insights.main.instrumentation_key
     "UserAppInsightsName"        = azurerm_application_insights.main.name
@@ -127,14 +127,14 @@ resource "azurerm_app_service" "mainqna" {
 }
 
 resource "azurerm_cognitive_account" "main" {
-  name                              = format("%s-qna", lower(var.application_name))
+  name                              = format("%s-qna", lower(var.name))
   location                          = "westus"
   resource_group_name               = local.resource_group_name
   kind                              = "QnAMaker"
   local_auth_enabled                = true
   outbound_network_access_restrited = false
   public_network_access_enabled     = true
-  qna_runtime_endpoint              = format("https://%s-qna.azurewebsites.net", lower(var.application_name))
+  qna_runtime_endpoint              = format("https://%s-qna.azurewebsites.net", lower(var.name))
   sku_name                          = "S0"
   tags                              = var.tags
 
@@ -145,11 +145,11 @@ resource "azurerm_cognitive_account" "main" {
 
 module "serviceprincipal" {
   source = "imjoseangel/serviceprincipal/azurerm"
-  name   = lower(var.application_name)
+  name   = lower(var.name)
 }
 
 resource "azurerm_app_service" "main" {
-  name                = lower(var.application_name)
+  name                = lower(var.name)
   resource_group_name = local.resource_group_name
   app_service_plan_id = azurerm_app_service_plan.main.id
   location            = var.location
@@ -231,7 +231,7 @@ resource "azurerm_app_service" "main" {
 }
 
 resource "azurerm_cognitive_account" "mainluis" {
-  name                              = format("%s-luis", lower(var.application_name))
+  name                              = format("%s-luis", lower(var.name))
   location                          = "westeurope"
   resource_group_name               = local.resource_group_name
   kind                              = "LUIS"
@@ -243,7 +243,7 @@ resource "azurerm_cognitive_account" "mainluis" {
 }
 
 resource "azurerm_cognitive_account" "mainluisauth" {
-  name                              = format("%s-luis-authoring", lower(var.application_name))
+  name                              = format("%s-luis-authoring", lower(var.name))
   location                          = "westeurope"
   resource_group_name               = local.resource_group_name
   kind                              = "LUIS.Authoring"
@@ -255,11 +255,11 @@ resource "azurerm_cognitive_account" "mainluisauth" {
 }
 
 resource "azurerm_bot_service_azure_bot" "main" {
-  name                                  = lower(var.application_name)
+  name                                  = lower(var.name)
   resource_group_name                   = local.resource_group_name
   location                              = "global"
-  display_name                          = lower(var.application_name)
-  endpoint                              = format("https://%s.azurewebsites.net/api/messages", lower(var.application_name))
+  display_name                          = lower(var.name)
+  endpoint                              = format("https://%s.azurewebsites.net/api/messages", lower(var.name))
   developer_app_insights_application_id = azurerm_application_insights.main.app_id
   developer_app_insights_key            = azurerm_application_insights.main.instrumentation_key
   microsoft_app_id                      = module.serviceprincipal.client_id

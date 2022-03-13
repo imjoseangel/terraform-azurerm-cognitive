@@ -1,8 +1,3 @@
-variable "search_name" {
-  description = "Name of Azure Search service."
-  type        = string
-}
-
 variable "create_resource_group" {
   description = "Whether to create resource group"
   default     = true
@@ -16,6 +11,12 @@ variable "resource_group_name" {
 variable "location" {
   description = "The location/region to keep all resources. To get the list of all locations with table format from azure cli, run 'az account list-locations -o table'"
   default     = "westeurope"
+}
+
+variable "name" {
+  description = "Name of the Application."
+  type        = string
+  default     = null
 }
 
 variable "search_sku" {
@@ -34,12 +35,6 @@ variable "replica_count" {
   description = "(Optional) The number of replica's which should be created."
   default     = 1
   type        = number
-}
-
-variable "application_name" {
-  description = "Name of the Application."
-  type        = string
-  default     = null
 }
 
 variable "tags" {
