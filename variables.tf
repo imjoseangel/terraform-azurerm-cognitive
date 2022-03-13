@@ -36,20 +36,8 @@ variable "replica_count" {
   type        = number
 }
 
-variable "application_insights_name" {
-  description = "Name of the existing Application Insights to use."
-  type        = string
-  default     = null
-}
-
-variable "application_plan_name" {
-  description = "Name of the existing Application Plan to use."
-  type        = string
-  default     = null
-}
-
-variable "application_qna_name" {
-  description = "Name of the existing Application QNA to use."
+variable "application_name" {
+  description = "Name of the Application."
   type        = string
   default     = null
 }
