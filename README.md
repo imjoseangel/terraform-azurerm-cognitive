@@ -25,7 +25,7 @@ module "cognitive" {
   source                = "github.com/imjoseangel/terraform-azurerm-cognitive"
   name                  = "cognitiveservice"
   location              = local.location
-  resource_group_name   = "rsg-aks"
+  resource_group_name   = "rsg-cognitive"
   location              = "westeurope"
   create_resource_group = false
 }
