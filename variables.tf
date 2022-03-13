@@ -48,6 +48,12 @@ variable "application_plan_name" {
   default     = null
 }
 
+variable "application_qna_name" {
+  description = "Name of the existing Application QNA to use."
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to all resources created."
   type        = map(string)

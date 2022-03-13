@@ -69,3 +69,59 @@ resource "azurerm_app_service_plan" "main" {
   }
 
 }
+
+resource "azurerm_app_service" "mainqna" {
+  name                = lower(var.application_qna_name)
+  resource_group_name = local.resource_group_name
+  app_service_plan_id = azurerm_app_service_plan.main.id
+  location            = var.location
+  app_settings = {
+    "AzureSearchAdminKey"        = azurerm_search_service.main.primary_key
+    "AzureSearchName"            = azurerm_search_service.main.name
+    "DefaultAnswer"              = "No good match found in KB."
+    "EnableMultipleTestIndex"    = "true"
+    "PrimaryEndpointKey"         = format("%s-PrimaryEndpointKey", var.application_qna_name)
+    "QNAMAKER_EXTENSION_VERSION" = "latest"
+    "SecondaryEndpointKey"       = format("%s-SecondaryEndpointKey", var.application_qna_name)
+    "UserAppInsightsAppId"       = azurerm_application_insights.main.app_id
+    "UserAppInsightsKey"         = azurerm_application_insights.main.instrumentation_key
+    "UserAppInsightsName"        = azurerm_application_insights.main.name
+  }
+
+  client_affinity_enabled = true
+  client_cert_enabled     = false
+  client_cert_mode        = "Required"
+  enabled                 = true
+  https_only              = false
+
+  tags = var.tags
+
+  auth_settings {
+    additional_login_params        = {}
+    allowed_external_redirect_urls = []
+    enabled                        = false
+    token_refresh_extension_hours  = 0
+    token_store_enabled            = false
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  logs {
+    detailed_error_messages_enabled = false
+    failed_request_tracing_enabled  = false
+
+    application_logs {
+      file_system_level = "Off"
+    }
+
+    http_logs {
+
+      file_system {
+        retention_in_days = 1
+        retention_in_mb   = 35
+      }
+    }
+  }
+}
