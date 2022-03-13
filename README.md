@@ -17,17 +17,13 @@ This Terraform module deploys a Bot Services on Azure using Cognitive Services a
 ## Usage in Terraform 1.0
 
 ```terraform
-data "azurerm_resource_group" "aksvnetrsg" {
-  name = "vnetrsg-aks"
-}
-
 module "cognitive" {
   source                = "github.com/imjoseangel/terraform-azurerm-cognitive"
   name                  = "cognitiveservice"
   location              = local.location
   resource_group_name   = "rsg-cognitive"
   location              = "westeurope"
-  create_resource_group = false
+  create_resource_group = true
 }
 ```
 
