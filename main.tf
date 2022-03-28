@@ -50,30 +50,21 @@ resource "azurerm_application_insights" "main" {
   tags                                  = var.tags
 }
 
-resource "azurerm_app_service_plan" "main" {
+resource "azurerm_service_plan" "main" {
   name                         = lower(var.name)
   location                     = var.location
   resource_group_name          = local.resource_group_name
-  is_xenon                     = false
-  kind                         = "app"
+  os_type                      = "Windows"
   maximum_elastic_worker_count = 1
-  per_site_scaling             = false
-  reserved                     = false
+  per_site_scaling_enabled     = false
   tags                         = var.tags
-  zone_redundant               = false
-
-  sku {
-    capacity = 1
-    size     = "P1v3"
-    tier     = "PremiumV2"
-  }
-
+  sku_name                     = "P1v3"
 }
 
 resource "azurerm_app_service" "mainqna" {
   name                = format("%s-qna", lower(var.name))
   resource_group_name = local.resource_group_name
-  app_service_plan_id = azurerm_app_service_plan.main.id
+  app_service_plan_id = azurerm_service_plan.main.id
   location            = var.location
   app_settings = {
     "AzureSearchAdminKey"        = azurerm_search_service.main.primary_key
@@ -127,16 +118,16 @@ resource "azurerm_app_service" "mainqna" {
 }
 
 resource "azurerm_cognitive_account" "main" {
-  name                              = format("%s-qna", lower(var.name))
-  location                          = "westus"
-  resource_group_name               = local.resource_group_name
-  kind                              = "QnAMaker"
-  local_auth_enabled                = true
-  outbound_network_access_restrited = false
-  public_network_access_enabled     = true
-  qna_runtime_endpoint              = format("https://%s-qna.azurewebsites.net", lower(var.name))
-  sku_name                          = "S0"
-  tags                              = var.tags
+  name                               = format("%s-qna", lower(var.name))
+  location                           = "westus"
+  resource_group_name                = local.resource_group_name
+  kind                               = "QnAMaker"
+  local_auth_enabled                 = true
+  outbound_network_access_restricted = false
+  public_network_access_enabled      = true
+  qna_runtime_endpoint               = format("https://%s-qna.azurewebsites.net", lower(var.name))
+  sku_name                           = "S0"
+  tags                               = var.tags
 
   identity {
     type = "SystemAssigned"
@@ -146,13 +137,13 @@ resource "azurerm_cognitive_account" "main" {
 module "serviceprincipal" {
   source  = "imjoseangel/serviceprincipal/azurerm"
   name    = lower(var.name)
-  version = "22.1.11"
+  version = "22.1.12"
 }
 
 resource "azurerm_app_service" "main" {
   name                = lower(var.name)
   resource_group_name = local.resource_group_name
-  app_service_plan_id = azurerm_app_service_plan.main.id
+  app_service_plan_id = azurerm_service_plan.main.id
   location            = var.location
   app_settings = {
     "MicrosoftAppId"               = module.serviceprincipal.client_id
@@ -232,27 +223,27 @@ resource "azurerm_app_service" "main" {
 }
 
 resource "azurerm_cognitive_account" "mainluis" {
-  name                              = format("%s-luis", lower(var.name))
-  location                          = "westeurope"
-  resource_group_name               = local.resource_group_name
-  kind                              = "LUIS"
-  local_auth_enabled                = true
-  outbound_network_access_restrited = false
-  public_network_access_enabled     = true
-  sku_name                          = "S0"
-  tags                              = var.tags
+  name                               = format("%s-luis", lower(var.name))
+  location                           = "westeurope"
+  resource_group_name                = local.resource_group_name
+  kind                               = "LUIS"
+  local_auth_enabled                 = true
+  outbound_network_access_restricted = false
+  public_network_access_enabled      = true
+  sku_name                           = "S0"
+  tags                               = var.tags
 }
 
 resource "azurerm_cognitive_account" "mainluisauth" {
-  name                              = format("%s-luis-authoring", lower(var.name))
-  location                          = "westeurope"
-  resource_group_name               = local.resource_group_name
-  kind                              = "LUIS.Authoring"
-  local_auth_enabled                = true
-  outbound_network_access_restrited = false
-  public_network_access_enabled     = true
-  sku_name                          = "F0"
-  tags                              = var.tags
+  name                               = format("%s-luis-authoring", lower(var.name))
+  location                           = "westeurope"
+  resource_group_name                = local.resource_group_name
+  kind                               = "LUIS.Authoring"
+  local_auth_enabled                 = true
+  outbound_network_access_restricted = false
+  public_network_access_enabled      = true
+  sku_name                           = "F0"
+  tags                               = var.tags
 }
 
 resource "azurerm_bot_service_azure_bot" "main" {
