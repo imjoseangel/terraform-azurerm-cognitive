@@ -137,7 +137,7 @@ resource "azurerm_cognitive_account" "main" {
 module "serviceprincipal" {
   source  = "imjoseangel/serviceprincipal/azurerm"
   name    = lower(var.name)
-  version = "22.1.14"
+  version = "22.1.15"
 }
 
 resource "azurerm_app_service" "main" {
